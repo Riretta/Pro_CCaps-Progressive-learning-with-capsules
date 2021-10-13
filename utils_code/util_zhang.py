@@ -7,6 +7,7 @@ from Zhang_github_N.data_imagenet import  ValImageFolder
 from torch.utils.data import DataLoader
 from torchvision import transforms, datasets
 
+
 def load_img(img_path):
     out_np = np.asarray(Image.open(img_path))
     if (out_np.ndim == 2):
@@ -50,13 +51,13 @@ def postprocess_tens(tens_orig_l, out_ab,j, mode='bilinear'):
     out_lab_orig = torch.cat((tens_orig_l, out_ab_orig), dim=1)
     return color.lab2rgb(out_lab_orig.data.cpu().numpy()[j, ...].transpose((1, 2, 0)))
 
-def load_dataset(dataset_path_train,dataset_path_val,batch_size):
+def load_dataset(dataset_path_train,dataset_path_val,batch_size, size=224):
     class RGB2LAB(object):
         def __init__(self):
             super(RGB2LAB, self).__init__()
 
         def __call__(self, img):
-            (tens_rs_ab, tens_rs_l, tens_rxs_ab) = preprocess_img(img, HW=(224, 224), resample=3)
+            (tens_rs_ab, tens_rs_l, tens_rxs_ab) = preprocess_img(img, HW=(size, size), resample=3)
             return tens_rs_ab, tens_rs_l, tens_rxs_ab
 
     original_transform = transforms.Compose([RGB2LAB()])
@@ -70,24 +71,41 @@ def load_dataset(dataset_path_train,dataset_path_val,batch_size):
                                      pin_memory=False)}
     return dataloaders
 
-def load_Imagenet_dataset(dataset_path,batch_size):
+def load_Imagenet_dataset(dataset_path,batch_size, size=224):
     class RGB2LAB(object):
         def __init__(self):
             super(RGB2LAB, self).__init__()
 
         def __call__(self, img):
-            (tens_rs_ab, tens_rs_l, tens_rxs_ab) = preprocess_img(img, HW=(224, 224), resample=3)
+            (tens_rs_ab, tens_rs_l, tens_rxs_ab) = preprocess_img(img, HW=(size, size), resample=3)
             return tens_rs_ab, tens_rs_l, tens_rxs_ab
 
     original_transform = transforms.Compose([RGB2LAB()])
 
     ImageDataset = {'train': datasets.ImageNet(dataset_path, split='train', transform=original_transform),
                     'val': datasets.ImageNet(dataset_path, split='val', transform=original_transform)}
-    dataloaders = {'train': DataLoader(ImageDataset['train'], batch_size=batch_size, shuffle=False),#,num_workers=4,
-                                       # pin_memory=False),
-                   'val': DataLoader(ImageDataset['val'], batch_size=batch_size, shuffle=False),#,num_workers=4,
-                                     # pin_memory=False)
+    dataloaders = {'train': DataLoader(ImageDataset['train'], batch_size=batch_size, shuffle=False,num_workers=4,
+                                       pin_memory=False),
+                   'val': DataLoader(ImageDataset['val'], batch_size=batch_size, shuffle=False,num_workers=4,
+                                      pin_memory=False)
                     }
     return dataloaders
 
-print("Util Zhang file")
+def val_load_dataset(dataset_path,batch_size, size =224):
+    class RGB2LAB(object):
+        def __init__(self):
+            super(RGB2LAB, self).__init__()
+
+        def __call__(self, img):
+            (tens_rs_ab, tens_rs_l, tens_rxs_ab) = preprocess_img(img, HW=(size, size), resample=3)
+            return tens_rs_ab, tens_rs_l, tens_rxs_ab
+
+    original_transform = transforms.Compose([RGB2LAB()])
+
+    ImageDataset = ValImageFolder(dataset_path,transform=original_transform)
+    dataloaders = DataLoader(ImageDataset, batch_size=batch_size, shuffle=False,num_workers=4,
+                                      pin_memory=False)
+
+    return dataloaders
+
+print("Util Zan _ [-127,128]")

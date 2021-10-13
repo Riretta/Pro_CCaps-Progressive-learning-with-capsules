@@ -22,7 +22,7 @@ class NNEncLayer(object):
     def __init__(self):
         self.NN = 5
         self.sigma = 0.5
-        self.ENC_DIR = './resources/'
+        self.ENC_DIR = './'
         self.nnenc = NNEncode(self.NN, self.sigma, km_filepath=os.path.join(self.ENC_DIR, 'pts_in_hull.npy'))
 
         self.X = 224
@@ -50,7 +50,7 @@ class PriorBoostLayer(object):
     '''
 
     def __init__(self, ENC_DIR='./resources/', gamma=0.5, alpha=1.0):
-        self.ENC_DIR = './resources/'
+        self.ENC_DIR = './'
         self.gamma = .5
         self.alpha = 1.
         self.pc = PriorFactor(self.alpha, gamma=self.gamma, priorFile=os.path.join(self.ENC_DIR, 'prior_probs.npy'))

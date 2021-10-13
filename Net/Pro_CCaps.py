@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from Zhang_github_N.base_color import *
+from colour_utils.base_color import *
 import math
 import numpy as np
 
@@ -149,9 +149,9 @@ def squash(input_tensor):
     return output_tensor
 
 class DigitCaps(nn.Module):
-    def __init__(self, logits_num=32, num_routes=(32, 9, 9), num_capsules=16,squash_bool = True):
+    def __init__(self, logits_num=32, num_routes=(32, 9, 9), num_capsules=16):
         super(DigitCaps, self).__init__()
-        self.squash_bool = squash_bool
+        self.squash_bool = True
         self.num_routes = num_routes
         self.num_copies = 1
         self.W = nn.Parameter(torch.randn(1, np.prod(self.num_routes), self.num_copies, logits_num, num_capsules))
@@ -195,10 +195,8 @@ class DigitCaps(nn.Module):
 
 
 class Reconstruction(BaseColor):
-    def __init__(self, logits_num=32, num_capsules=16, num_routes=(32, 9, 9), AM=False):
+    def __init__(self, logits_num=32, num_capsules=16, num_routes=(32, 9, 9)):
         super(Reconstruction, self).__init__()
-
-        self.AM = AM
 
         self.color_channels = 2
         self.num_routes = num_routes
@@ -288,13 +286,13 @@ class Reconstruction(BaseColor):
 
 
 class CapsNet_MR(nn.Module):
-    def __init__(self, logits_num, AM=False, num_capsules=16, num_routes=(32, 9, 9), squash_bool = True):
+    def __init__(self, logits_num, num_capsules=16, num_routes=(32, 9, 9)):
         super(CapsNet_MR, self).__init__()
-        print('__UCapsNet__tiny__1_PL')
+        print('__Pro_CCaps__')
         self.conv_layer = ConvLayer()
         self.primary_capsules = PrimaryCaps(num_capsules=num_capsules)
-        self.digit_capsules = DigitCaps(logits_num=logits_num, num_routes=num_routes, num_capsules=num_capsules,squash_bool = squash_bool)
-        self.reconstruction = Reconstruction(logits_num=logits_num, AM=AM, num_routes=num_routes,
+        self.digit_capsules = DigitCaps(logits_num=logits_num, num_routes=num_routes, num_capsules=num_capsules)
+        self.reconstruction = Reconstruction(logits_num=logits_num, num_routes=num_routes,
                                              num_capsules=num_capsules)
 
         self.mse_loss = nn.MSELoss()
@@ -338,17 +336,3 @@ class CapsNet_MR(nn.Module):
 
         return loss * 0.001
 
-
-model  = CapsNet_MR(128,(32,9,9))
-def get_n_params(model):
-    pp=0
-    for p in list(model.parameters()):
-        nn=1
-        for s in list(p.size()):
-            nn = nn*s
-        pp += nn
-    return pp
-def count_parameters(model):
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
-print(get_n_params(model))
-print(count_parameters(model))

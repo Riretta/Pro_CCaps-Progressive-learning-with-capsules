@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from colour_utils.base_color import *
+from colours_utils.base_color import *
 import math
 import numpy as np
 

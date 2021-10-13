@@ -3,7 +3,7 @@ import numpy as np
 from skimage import color
 import torch
 import torch.nn.functional as F
-from Zhang_github_N.data_imagenet import  ValImageFolder
+from colours_utils.data_imagenet import  ValImageFolder
 from torch.utils.data import DataLoader
 from torchvision import transforms, datasets
 

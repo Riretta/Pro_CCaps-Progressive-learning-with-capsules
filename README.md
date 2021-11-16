@@ -4,6 +4,6 @@ Automatic image colourisation studies how to colourisegreyscale  images.    Exis
 This Project is going to appear at WACV2022.
 
 Please if you use this repository for you research, cite me:\
-"Pro-CCaps: Progressively Teaching Colourisation to Capsules\
+"Pro-CCaps: Progressively Teaching Colourisation to Capsules"\
 Rita Pucci, Christian Micheloni, Gian Luca Foresti, Niki Martinel\
 WACV 2022

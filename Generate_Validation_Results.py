@@ -1,7 +1,7 @@
 """model definition"""
 """trained not GAN"""
 
-from U_CapsNets.TUCaN_v1_PL import CapsNet_MR
+from Net.ProCCaps import CapsNet_MR
 # ------------
 from torch import Tensor, device
 from torch.utils.data import DataLoader
